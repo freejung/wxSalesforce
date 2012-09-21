@@ -1,6 +1,6 @@
-wxEloqua is a client for the Eloqua SOAP API and an Eloqua Cloud Connector for the Webinex webinar management system for MODX Revolution.
-
+wxSalesforce is a Salesforce integration for MODX Revolution. The first version is a SOAP server to receive outbound messages from Salesforce and pass data to Eloqua using wxEloqua
 Dependencies: 
   - MODX Revolution 2.2+
   - Webinex
-  - Eloqua SOAP API PHP class library and wsdl
+  - wxEloqua
+  - Salesforce outbound message wsdl
