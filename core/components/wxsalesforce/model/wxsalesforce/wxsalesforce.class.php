@@ -98,6 +98,70 @@ class CaseNotification
 
 }
 
+class TaskNotification
+{
+
+  /**
+   * 
+   * @var ID $Id
+   * @access public
+   */
+  public $Id;
+   /**
+   * 
+   * @var Task $sObject
+   * @access public
+   */
+  public $sObject;
+
+  /**
+   * 
+   * @param string $Id
+   * @access public
+   * 
+   * @param Task $sObject
+   * @access public
+   */
+  public function __construct($Id, $sObject)
+  {
+    $this->Id = $Id;
+    $this->sObject = $sObject;
+  }
+
+}
+
+class Actions_Results_Report__cNotification
+{
+
+  /**
+   * 
+   * @var ID $Id
+   * @access public
+   */
+  public $Id;
+   /**
+   * 
+   * @var Actions_Results_Report__c $sObject
+   * @access public
+   */
+  public $sObject;
+
+  /**
+   * 
+   * @param string $Id
+   * @access public
+   * 
+   * @param Actions_Results_Report__c $sObject
+   * @access public
+   */
+  public function __construct($Id, $sObject)
+  {
+    $this->Id = $Id;
+    $this->sObject = $sObject;
+  }
+
+}
+
 class sObject
 {
 
@@ -153,6 +217,66 @@ class sCase extends sObject
   public function __construct($fieldsToNull, $Id, $ContactId)
   {
     $this->ContactId = $ContactId;
+    parent::__construct($fieldsToNull, $Id);
+  }
+}
+
+class Task extends sObject
+{
+	/**
+   * 
+   * @var ID $WhoId
+   * @access public
+   */
+  public $WhoId;
+  
+  /**
+   * 
+   * @param string $fieldsToNull
+   * @access public
+   * 
+   * @param ID $Id
+   * @access public
+   * 
+   * @param ID $WhoId
+   * @access public
+   */
+  public function __construct($fieldsToNull, $Id, $WhoId)
+  {
+    $this->WhoId = $WhoId;
+    parent::__construct($fieldsToNull, $Id);
+  }
+}
+
+class Actions_Results_Report__c extends sObject
+{
+	/**
+   * 
+   * @var ID $Dealership_Contact_1__c
+   * @var ID $Dealership_Contact_2__c
+   * @access public
+   */
+  public $Dealership_Contact_1__c;
+  public $Dealership_Contact_2__c;
+  
+  /**
+   * 
+   * @param string $fieldsToNull
+   * @access public
+   * 
+   * @param ID $Id
+   * @access public
+   * 
+   * @param ID $Dealership_Contact_1__c
+   * @access public
+   *
+   * @param ID $Dealership_Contact_2__c
+   * @access public
+   */
+  public function __construct($fieldsToNull, $Id, $Dealership_Contact_1__c, $Dealership_Contact_2__c)
+  {
+    $this->Dealership_Contact_1__c = $Dealership_Contact_1__c;
+    $this->Dealership_Contact_2__c = $Dealership_Contact_2__c;
     parent::__construct($fieldsToNull, $Id);
   }
 }
@@ -301,7 +425,7 @@ class wxSalesforce {
     public $modx;
     public $config = array();
     private $ClassMap = array();
-    private $caseWSDL = '';
+    private $WSDL = '';
     
     public function __construct(modX &$modx,array $config = array()) {
         $this->modx =& $modx;
@@ -314,15 +438,15 @@ class wxSalesforce {
 				'sObject' => 'sObject',
 				'Case' => 'sCase',
 			),
-			'casewsdl' => $this->modx->getOption('wxSalesforce.core_path',null,$this->modx->getOption('core_path').'components/wxsalesforce/').'model/wxsalesforce/wsdl/sfs.wsdl',
+			'wsdl' => 'sfs.wsdl',
 			'addtolists' => array(714),
         ),$config);
         $this->ClassMap = $this->config['classmap'];
-        $this->caseWSDL = $this->config['casewsdl'];
+        $this->WSDL = $this->modx->getOption('wxSalesforce.core_path',null,$this->modx->getOption('core_path').'components/wxsalesforce/').'model/wxsalesforce/wsdl/'.$this->config['wsdl'];
     }
 	
-	public function handleCaseNotification() {
-		$server = new SoapServer($this->caseWSDL, array('classmap' => $this->ClassMap));
+	public function handleNotification() {
+		$server = new SoapServer($this->WSDL, array('classmap' => $this->ClassMap));
 		$wxNotifications = new wxNotifications($this->modx, array('addtolists' => $this->config['addtolists']));
 		$server->setObject($wxNotifications);
 		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
